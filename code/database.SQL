@@ -1,3 +1,4 @@
+-- SQL CREATE TABLE ---
 CREATE TABLE IF NOT EXISTS game (
    idGame INTEGER PRIMARY KEY AUTOINCREMENT,
    score INTEGER,
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS lectures (
 );
 
 CREATE TABLE IF NOT EXISTS questions (
-    idGame INTEGER PRIMARY KEY AUTOINCREMENT,
+    idQuestion INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT,
     lectureIdLecture INTEGER,
     date TIMESTAMP,
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS questions (
 );
 
 CREATE TABLE IF NOT EXISTS responses (
-    idQuestion INTEGER PRIMARY KEY AUTOINCREMENT,
+    idResponse INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT,
     state INT,
     questionIdQuestion INTEGER,
@@ -35,3 +36,49 @@ CREATE TABLE IF NOT EXISTS users (
     name TEXT,
     date TIMESTAMP
 );
+
+-- SQL SCRIPTS USERS ---
+INSERT INTO users (name, date)
+VALUES("regis", DATE('now')
+
+
+-- SQL SCRIPT ADD LECTURE
+INSERT INTO lectures (title, description, date)
+VALUES("Software Algorithms", "This is software Algorithms Lecturer", DATE('now'))
+
+-- SQL SCRIPT ADD QUESTIONS
+-- Question 1:
+INSERT INTO questions (description, lectureIdLecture, date)
+VALUES("What is the main goal of software testing?", 1, DATE('now'));
+
+
+-- Question 2:
+INSERT INTO questions (description, lectureIdLecture, date)
+VALUES("What type of testing involves testing individual components of the software in isolation?", 1, DATE('now'));
+
+-- Question 3:
+INSERT INTO questions (description, lectureIdLecture, date)
+VALUES("Which testing technique involves running the system under a controlled environment to ensure it meets specified requirements?", 1, DATE('now
+
+-- SQL SCRIPT ADD MANY RESPONSES OF ONE QUESTION
+INSERT INTO responses (description, state, questionIdQuestion, date)
+VALUES
+("To ensure the software performs as expected and to identify defects.", 1, 1, DATE('NOW')),
+("To write the software code", 0, 1, DATE('NOW')),
+("To design the Software architecture", 0, 1, DATE('now'));
+
+-- SELECT RESPONSES
+SELECT * FROM responses;
+
+-- SELECT QUESTIONS
+SELECT * FROM questions;
+
+-- SELECT RESPONSES AND QUESTIONS (THIS IS JOINTURE)
+SELECT
+     responses.idResponse as idResponse,
+     responses.description as description,
+     responses.state as state,
+     questions.idQuestion as idQuestion,
+     questions.description as titleQuestion,
+FROM responses
+INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
