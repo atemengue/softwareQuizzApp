@@ -1,147 +1,152 @@
-import tk
-import tkinter as tk
-from tkinter import messagebox
+import datetime
+import sqlite3
+import csv
+
+CREATE_TABLE_GAME = """
+CREATE TABLE IF NOT EXISTS game (
+   idGame INTEGER PRIMARY KEY AUTOINCREMENT,
+   score INTEGER,
+   userIdUser INTEGER,
+   date TIMESTAMP,
+   FOREIGN KEY (userIdUser) REFERENCES users(idUser)
+);
+"""
+
+CREATE_TABLE_LECTURE = """
+CREATE TABLE IF NOT EXISTS lectures (
+    idLecturer INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    description TEXT,
+    date TIMESTAMP
+);
+"""
+
+CREATE_TABLE_QUESTION = """
+CREATE TABLE IF NOT EXISTS questions (
+    idQuestion INTEGER PRIMARY KEY AUTOINCREMENT,
+    description TEXT,
+    lectureIdLecture INTEGER,
+    date TIMESTAMP,
+    FOREIGN KEY (lectureIdLecture) REFERENCES lectures(idLecture)
+);
+"""
+
+CREATE_TABLE_RESPONSE = """
+CREATE TABLE IF NOT EXISTS responses (
+    idResponse INTEGER PRIMARY KEY AUTOINCREMENT,
+    description TEXT,
+    state INT,
+    questionIdQuestion INTEGER,
+    date TIMESTAMP,
+    FOREIGN KEY (questionIdQuestion) REFERENCES questions(idQuestion)
+);
+"""
+
+CREATE_TABLE_USER = """
+CREATE TABLE IF NOT EXISTS users (
+    idUser INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    date TIMESTAMP
+);
+"""
+
+ADD_USER = """
+    INSERT INTO users (name, date)
+    VALUES("regis", DATE('now'));
+"""
+
+ADD_LECTURE = """
+INSERT INTO lectures (title, description, date)
+VALUES("Software Algorithms", "This is software Algorithms Lecturer", DATE('now'));
+"""
+
+ADD_QUESTION = """
+    INSERT INTO questions (description, lectureIdLecture, date)
+    VALUES("What is the main goal of software testing?", 1, DATE('now'));
+"""
+
+ADD_RESPONSES = """
+    INSERT INTO responses (description, state, questionIdQuestion, date)
+    VALUES
+    ("To ensure the software performs as expected and to identify defects.", 1, 1, DATE('NOW')),
+    ("To write the software code", 0, 1, DATE('NOW')),
+    ("To design the Software architecture", 0, 1, DATE('now'))
+"""
+
+GET_ALL_QUESTIONS_WITH_RESPONSES = """
+    SELECT
+     responses.idResponse as idResponse,
+     responses.description as description,
+     responses.state as state,
+     questions.idQuestion as idQuestion,
+     questions.description as titleQuestion
+FROM responses
+INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion;
+"""
+
+def add_player(name) :
+    sql = "INSERT INTO users(name, date) VALUES(?, ?);"
+    values = (name, datetime.datetime.now())
+    cursor.execute(sql, values)
+    database.commit()
+
+# def import_questions(csv_file):
+#     with open(csv_file, "r") as f:
+#         rdr = csv.reader(f, delimiter=",")
+#         rows = list(rdr)
+#         print(rows, 'the rows')
+#         sql = "INSERT INTO questions VALUES (?, ?, ?, ?);"
+#         cursor.executemany(sql, rows)
+#         database.commit()
+#
+#         print(f"Imported {len(rows)} investments from {csv_file}")
+
+
+if __name__ == "__main__":
+    database = sqlite3.connect("quizz.db")
+    cursor = database.cursor()
+    cursor.execute(CREATE_TABLE_USER)
+    cursor.execute(CREATE_TABLE_GAME)
+    cursor.execute(CREATE_TABLE_LECTURE)
+    cursor.execute(CREATE_TABLE_QUESTION)
+    cursor.execute(CREATE_TABLE_RESPONSE)
+
+    # create payer
+    name = input("Enter your player name: ")
+    add_player(name)
+
+    #add lecturer
+
+    #cursor.execute(ADD_LECTURE)
+    #database.commit()
+
+    ##add questions
+    #cursor.execute(ADD_QUESTION)
+    #database.commit()
+
+    #add responses
+    #cursor.execute(ADD_RESPONSES)
+    #database.commit()
+
+    #import responses
+   # import_questions("../files/questions.csv")
+
+    #get all questions with responses
+    questions = cursor.execute(GET_ALL_QUESTIONS_WITH_RESPONSES).fetchall()
+    print(questions)
 
 
 
-class QuizApp:
-    def __init__(self, root): #constructeur
-        self.root = root
-        self.root.title("Intellilearn")  # fenetre principale
-        self.score = 0
-        self.question_num = 1
-
-        self.questions = ("Welche Dimensionen gehören zum magischen Viereck des Projektmanagements? :",
-            "Welche Herausforderungen treten häufig bei einer Software auf?:",
-            "Welche Begriffe gehören zu den organisatorischen Erfolgsfaktoren ?",
-            "Welche Eigenschaften hat eine Software? :",
-            "Welche Definition beschreibt ein Programm? :",
-            "Was ist wichtig bei der Erfassung von Anforderungen? :",
-            "Was ist die Konsequenz, wenn man kein Architeckturentwurf macht? :",
-            "Was sind die Kernaufgaben der Architektur? :",
-            "Warum werden Aufgaben im Betrieb und in der Evolution oft falsch unterschätzt? :",
-            "Nach was kann man Software kategorisieren? :",
-            "Auf welche Art erfolgt die Erbringung des Nutzers? :",
-            "Welche der folgenden Perspektiven gehören zum Ansichtenmodell? :",
-            "Welche Qualitätseigenschaften können von Kunden erwartet werden? :",
-            "Was ist das Ziel eines Vorgehensmodell? :",
-            "Ein Vorgehensmodell ist… :",
-            "Welche Folgen gehören zu dem Traditionellen Vorgehensmodell? :",
-            "Zu den Nachteilen des Wasserfall Modells gehören … ",
-            "Welche der folgenden Eigenschaften gehören zu dm Spiral Modell? :",
-            "Nach welchen Prinzipien ist das V-Modell XT ausgerichtet? :",
-            "Welche Rollen gehören zum Scrum? :",
-            "Welche ist die grundlegende Idee des Scrums? :",
-            "Wie lange dauert ein Sprint ca.? :",
-            "Welche Vorteile weist der Scum auf? :",
-            "Welche Definition passt zu der eines Modells? :",
-            "Was ist bei der Modellbildung wichtig? :",
-            "Was wird zur Modellierung von Daten verwendet? :",
-            "Welches Zeichen nutzt man für ein Privates Attribut in einer Notationsübersicht? :",
-            "Welche Art von Modellierungen gibt es? :",
-            "Wie nennt man dieses Symbol: ◆) ? :")
-
-        self.options = (("Qualität","Radius","Kommunikation"),
-           ("Ungenügende Planung","Schreibfehler","bessere Strucktur"),
-           ("Ressourcenverfügbarkeit","klare Anforderungen","Motivation"),
-           ("Software ist materiell","Software ist konkret","Software ist Befähigung"),
-           ("Verarbeitungsvorschrift auf einer Rechenanlage","Von Umgebung abgegrenztes Gebilde","Die Rechenanlage einer Umgebung"),
-           ("Die Analyse, um herauszufinden was der Hersteller will","Die Spezifikation, um die Anforderungen festzulegen","Der Test, um die Qualität des Codes sicherzustellen"),
-           ("Man spart Zeit in der Wartung" , "Man benötigt mehr Zeit in der Wartung",	"Es gibt keine Konseuqenzen"),
-           ("Analyse","Managementaufgaben","Wartung"),
-           ("weil es nicht wichtig ist","…weil es noch weit weg in der Zukunft ist","weil sie andere Sachen priorisieren"),
-           ("Grad der Systeme",	"Bearbeitung",	"Lizenzmodell"),
-           ("Anwenderinteraktion",	"Datenspeicherung",	"Datenerkennung"),
-           ("Fokussicht", "Plattformanbhängige Komponentensicht","Innensicht "),
-           ("Qualität in  Kompetenz","Qualität in Bearbeitung",	"Qualität in der Vermarktung"),
-           ("Systematisierung der Softwareentwicklung",	"Qualitative Ergebnisse","Schnelle Verarbeitung"),
-           ("…ein Spielplan","… eine Herausforderung","… ein Prozess zur Speicherung von Daten"),
-           ("viele verschiedene Ansätze","nur ein einzigen Ansatz",	"keine Gemeinsamkeiten"),
-           ("… eine schwere Projektorganisation","…Komplexität" ,"…ein schweres Controlling"),
-           ("aufwändige Planung","Schnelle Feedback-Zyklen","einfache Organisation"),
-           ("unstruckturierte Reihenfolgen","Iterative Entwicklung", "Alphabetische Reihenfolge"),
-           ("Creative Owner","Product  Master", "Team"),
-           ("Selbstorganisierte Teams",	"das Team muss einem strickten Plan befolgen","Nutzung abgesprochener Schritte"),
-           ("max. 10 Tage",	"max. 20 Tage",	"max. 30 Tage"),
-           ("einfache Strucktur", "'eigene' Terminologie",	"schwer zu verstehen"),
-           ("eine Komplizierte Idee","eine mathematische Ansicht","eine Abstraktion"),
-           ("Fomalisierung von Datenstruckturen","Erfassung von Ideen","Modellinerung der Daten"),
-           ("UML-Klassendiagramm",	"MLU-Klassendiagramm ","ULM-Klassendiagramm"),
-           ("'+'",	"'#'",	"'-'"),
-           ("Modellierung von Zuständen", "Modellierung von Eigenschaften", "Modellierung von Signalen"),
-           ("Assoziaton","Aggregation", "Komposition"))
-
-        self.answers =(  "Qualität",
-            "Ungenügende Planung",
-            "Ressourcenverfügbarkeit",
-            "Software ist Befähigung",
-            "Verarbeitungsvorschrift auf einer Rechenanlage",
-            "Die Spezifikation, um die Anforderungen festzulegen",
-            "Man benötigt mehr Zeit in der Wartung",
-            "Analyse",
-            "…weil es noch weit weg in der Zukunft ist",
-            "Grad der Systeme",
-            "Anwenderinteraktion",
-            "Fokussicht",
-            "Qualität in Kompetenz",
-            "Systematisierung der Softwareentwicklung",
-            "…ein Spielplan",
-            "viele verschiedene Ansätze",
-            "… eine schwere Projektorganisation",
-            "aufwändige Planung",
-            "Iterative Entwicklung",
-            "Product Master",
-            "Selbstorganisierte Teams",
-            "max. 10 Tage",
-            "einfache Struktur",
-            "eine Abstraktion",
-            "Modellierung der Daten",
-            "UML-Klassendiagramm",
-            "'-'",
-            "Modellierung von Zuständen",
-            "Aggregation")
 
 
-        self.correct_answers = [0, 0, 0]  # Index von Korrekte Antworten
-
-        self.question_label = tk.Label(root, text="", wraplength=500) #je cree un widget pour afficher une classe ou un object
-        self.question_label.pack(pady=20)
-
-        self.buttons = [tk.Button(root, text="", command=lambda opt=i: self.check_answer(opt)) for i in range(3)]
-        for button in self.buttons:
-            button.pack(fill="x", pady=5)
-
-        self.next_button = tk.Button(root, text="NEXT", command=self.next_question)
-        self.next_button.pack(pady=20)
-
-        self.display_question()
 
 
-    def display_question(self):
-        self.question_label.config(text=self.questions[self.question_num])
-        for i, option in enumerate(self.options[self.question_num]):
-            self.buttons[i].config(text=option)
 
 
-    def check_Answer(self, selected_option):
-        if selected_option == self.correct_answers[self.question_num]:
-            self.score += 1
-            self.next_question()
-
-    def next_question(self):
-        self.question_num += 1
-        if self.question_num < len(self.questions):
-            self.display_question()
-        else:
-            self.end_quiz()
 
 
-    def end_quiz(self):
-        messagebox.showinfo("quiz done", f"High score is {self.score} / {len(self.questions)}")
-        self.root.destroy()
 
 
-# Création de la fenêtre principale Tkinter
-root = tk.Tk()
-app = QuizApp(root)
-root.mainloop()
+
+
+

@@ -44,7 +44,10 @@ VALUES("regis", DATE('now')
 
 -- SQL SCRIPT ADD LECTURE
 INSERT INTO lectures (title, description, date)
-VALUES("Software Algorithms", "This is software Algorithms Lecturer", DATE('now'))
+VALUES
+("Fundamentals of Software Engineering", "This is Software Engineering Course Lecturer", DATE('now')),
+("Software Algorithms", "This is software Algorithms Lecturer", DATE('now')),
+("Software Testing", "This is software testing Lecture", DATE('now'))
 
 -- SQL SCRIPT ADD QUESTIONS
 -- Question 1:
