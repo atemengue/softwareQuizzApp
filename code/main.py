@@ -25,6 +25,7 @@ CREATE_TABLE_QUESTION = """
 CREATE TABLE IF NOT EXISTS questions (
     idQuestion INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT,
+    explanation TEXT,
     lectureIdLecture INTEGER,
     date TIMESTAMP,
     FOREIGN KEY (lectureIdLecture) REFERENCES lectures(idLecture)
@@ -56,8 +57,11 @@ ADD_USER = """
 """
 
 ADD_LECTURE = """
-INSERT INTO lectures (title, description, date)
-VALUES("Software Algorithms", "This is software Algorithms Lecturer", DATE('now'));
+    INSERT INTO lectures (title, description, date)
+    VALUES
+    ("Fundamentals of Software Engineering", "This is Software Engineering Course Lecturer", DATE('now')),
+    ("Software Algorithms", "This is software Algorithms Lecturer", DATE('now')),
+    ("Software Testing", "This is software testing Lecture", DATE('now'));
 """
 
 ADD_QUESTION = """
@@ -90,16 +94,27 @@ def add_player(name) :
     cursor.execute(sql, values)
     database.commit()
 
-# def import_questions(csv_file):
-#     with open(csv_file, "r") as f:
-#         rdr = csv.reader(f, delimiter=",")
-#         rows = list(rdr)
-#         print(rows, 'the rows')
-#         sql = "INSERT INTO questions VALUES (?, ?, ?, ?);"
-#         cursor.executemany(sql, rows)
-#         database.commit()
-#
-#         print(f"Imported {len(rows)} investments from {csv_file}")
+def import_questions(csv_file):
+    with open(csv_file, "r") as file:
+        reader = csv.reader(file, delimiter=",")
+        next(reader, None)
+        rows = list(reader)
+        print(rows)
+        sql = "INSERT INTO questions VALUES (?, ?, ?, ?, ?);"
+        cursor.executemany(sql, rows)
+        database.commit()
+        print(f"Imported {len(rows)} investments from {csv_file}")
+
+def import_responses(csv_file):
+    with open(csv_file, "r") as file:
+        reader = csv.reader(file, delimiter=",")
+        next(reader, None)
+        rows = list(reader)
+        print(rows)
+        sql = "INSERT INTO responses VALUES (?, ?, ?, ?, ?);"
+        cursor.executemany(sql, rows)
+        database.commit()
+        print(f"Imported {len(rows)} investments from {csv_file}")
 
 
 if __name__ == "__main__":
@@ -110,6 +125,14 @@ if __name__ == "__main__":
     cursor.execute(CREATE_TABLE_LECTURE)
     cursor.execute(CREATE_TABLE_QUESTION)
     cursor.execute(CREATE_TABLE_RESPONSE)
+
+
+    #load data Game
+    cursor.execute(ADD_LECTURE)
+    database.commit()
+
+    import_questions("../files/questions.csv")
+    import_responses("../files/responses.csv")
 
     # create payer
     name = input("Enter your player name: ")
@@ -129,11 +152,12 @@ if __name__ == "__main__":
     #database.commit()
 
     #import responses
-   # import_questions("../files/questions.csv")
+    #import_csv("../files/lectures.csv")
+    #import_csv("../files/quez.csv")
 
     #get all questions with responses
-    questions = cursor.execute(GET_ALL_QUESTIONS_WITH_RESPONSES).fetchall()
-    print(questions)
+    #questions = cursor.execute(GET_ALL_QUESTIONS_WITH_RESPONSES).fetchall()
+    #print(questions)
 
 
 

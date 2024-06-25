@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS lectures (
 CREATE_TABLE_QUESTION = """
 CREATE TABLE IF NOT EXISTS questions (
     idGame INTEGER PRIMARY KEY AUTOINCREMENT,
-    description TEXT
+    description TEXT,
+    EXPLANATION TEXT,
     date TIMESTAMP
 );
 """

@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS lectures (
 CREATE TABLE IF NOT EXISTS questions (
     idQuestion INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT,
+    explanation TEXT,
     lectureIdLecture INTEGER,
     date TIMESTAMP,
     FOREIGN KEY (lectureIdLecture) REFERENCES lectures(idLecture)
@@ -85,3 +86,4 @@ SELECT
      questions.description as titleQuestion,
 FROM responses
 INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
+

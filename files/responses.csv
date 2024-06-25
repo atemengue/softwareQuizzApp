@@ -1,0 +1,16 @@
+idResponse,description,state,questionIdQuestion,date
+1,Response A: A complete version of the software.,0,1,2024-06-25 04:40:34.481008
+2,"Response B: An early, simplified version used to demonstrate concepts and gather feedback.",1,1,2024-06-25 04:40:34.481009
+3,Response C: A final tested version before release.,0,1,2024-06-25 04:40:34.481010
+4,Response A: System testing,0,2,2024-06-25 04:40:34.481008
+5,Response B: Unit testing,1,2,2024-06-25 04:40:34.481008
+6,Response C: Integration testing,0,2,2024-06-25 04:40:34.481008
+7,Response A: Regression testing,0,3,2024-06-25 04:40:34.481008
+8,Response B: Acceptance testing,1,3,2024-06-25 04:40:34.481008
+9,Response C: Load testing,0,3,2024-06-25 04:40:34.481008
+10,Response A: It focuses on the internal structure of the code.,0,5,2024-06-25 04:40:34.481008
+11,Response B: It examines the functionality of the software without looking at the internal code structure.,1,5,2024-06-25 04:40:34.481008
+12,Response C: It requires knowledge of the source code.,0,5,2024-06-25 04:40:34.481008
+13,Response A: Writing code.,0,6,2024-06-25 04:40:34.481008
+14,"Response B: Requirements analysis, design, testing, and maintenance.",1,6,2024-06-25 04:40:34.481008
+15,Response C: Managing databases.,0,6,2024-06-25 04:40:34.481008
