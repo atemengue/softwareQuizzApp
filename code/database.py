@@ -43,6 +43,9 @@ CREATE TABLE IF NOT EXISTS users (
     date TIMESTAMP
 );
 """
+
+
+
 if __name__ == "__main__":
     database = sqlite3.connect("quizz.db")
     cursor = database.cursor()

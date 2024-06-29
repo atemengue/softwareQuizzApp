@@ -2,6 +2,5 @@ idQuestion,description,explanation,lectureIdLecture,date
 1,What is a software prototype?, A prototype is an early version used to test ideas and gather user feedback.,1,2024-06-25 04:40:34.481008
 2,What type of testing involves testing individual components of the software in isolation?,Unit testing involves testing individual components or modules of the software separately to ensure they function correctly on their own,3,2024-06-25 04:40:34.481008
 3,Which testing technique involves running the system under a controlled environment to ensure it meets specified requirements?,Acceptance testing is performed to ensure that the system meets the business requirements and is ready for delivery to the end user.,3,2024-06-25 04:40:34.481009
-4,What is the purpose of regression testing?,Regression testing is conducted to ensure that new code changes do not negatively impact the existing functionality of the software.,3,2024-06-25 04:40:34.481010
 5,What is a characteristic of black-box testing?,Black-box testing assesses the functionality of the software by examining the inputs and outputs without considering the internal code structure.,3,2024-06-25 04:40:34.481011
 6,What does software engineering primarily deal with?,Software engineering encompasses a broad range of activities beyond just coding.,1,2024-06-25 04:40:34.481012

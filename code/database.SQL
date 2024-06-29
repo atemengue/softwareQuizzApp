@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- SQL SCRIPTS USERS ---
 INSERT INTO users (name, date)
-VALUES("regis", DATE('now')
+VALUES("regis", DATE('now'));
 
 
 -- SQL SCRIPT ADD LECTURE
@@ -109,4 +109,13 @@ SELECT
 FROM users
 WHERE name = 'regis'
 
--- INSERT INTO GAMING TABLE
+-- SELECT ONE QUESTION
+SELECT
+     responses.idResponse as idResponse,
+     responses.description as description,
+     responses.state as state,
+     questions.idQuestion as idQuestion,
+     questions.description as titleQuestion
+FROM responses
+INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
+WHERE idQuestion = 3

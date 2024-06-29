@@ -114,8 +114,6 @@ WHERE name = 'regos'
 """
 
 
-
-
 def add_player(name):
     sql = "INSERT INTO users(name, date) VALUES(?, ?);"
     values = (name, datetime.datetime.now())
@@ -186,8 +184,8 @@ if __name__ == "__main__":
     cursor.execute(ADD_LECTURE)
     database.commit()
 
-    #import_questions("../files/questions.csv")
-    #import_responses("../files/responses.csv")
+    import_questions("../files/questions.csv")
+    import_responses("../files/responses.csv")
 
     # create payer
     name = input("Enter your player name: ")
