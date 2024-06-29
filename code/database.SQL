@@ -87,3 +87,26 @@ SELECT
 FROM responses
 INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
 
+--- SELECT ALL QUESTIONS
+SELECT  *
+FROM  questions;
+
+-- SELECT ALL RESPONSES OF ONE QUESTION (THIS IS JOINTURE)
+SELECT
+     responses.idResponse as idResponse,
+     responses.description as description,
+     responses.state as state,
+     questions.idQuestion as idQuestion,
+     questions.description as titleQuestion
+FROM responses
+INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
+WHERE idQuestion = 2
+
+
+--- SELECT ID PLAYER
+SELECT
+    idUser
+FROM users
+WHERE name = 'regis'
+
+-- INSERT INTO GAMING TABLE

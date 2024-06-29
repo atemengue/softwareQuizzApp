@@ -86,11 +86,47 @@ GET_ALL_QUESTIONS_WITH_RESPONSES = """
      questions.description as titleQuestion
 FROM responses
 INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion;
+
 """
 
-def add_player(name) :
+GET_ALL_QUESTIONS = """
+SELECT  *
+FROM  questions;
+"""
+
+GET_ALL_RESPONSES_OF_ONE_QUESTIONS = """
+SELECT
+     responses.idResponse as idResponse,
+     responses.description as description,
+     responses.state as state,
+     questions.idQuestion as idQuestion,
+     questions.description as titleQuestion
+FROM responses
+INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
+WHERE responses.idResponse = 2
+"""
+
+GET_USER_ID = """
+SELECT
+    idUser
+FROM users
+WHERE name = 'regos'
+"""
+
+
+
+
+def add_player(name):
     sql = "INSERT INTO users(name, date) VALUES(?, ?);"
     values = (name, datetime.datetime.now())
+    a = cursor.execute(sql, values)
+    print(a)
+    database.commit()
+
+
+def add_gaming(score, iduser):
+    sql = "INSERT INTO game(score, userIdUser, date) VALUES(?, ?, ?);"
+    values = (score, iduser, datetime.datetime.now())
     cursor.execute(sql, values)
     database.commit()
 
@@ -105,6 +141,7 @@ def import_questions(csv_file):
         database.commit()
         print(f"Imported {len(rows)} investments from {csv_file}")
 
+
 def import_responses(csv_file):
     with open(csv_file, "r") as file:
         reader = csv.reader(file, delimiter=",")
@@ -117,6 +154,25 @@ def import_responses(csv_file):
         print(f"Imported {len(rows)} investments from {csv_file}")
 
 
+def get_questions_response(idQuestion):
+    sql = f"""SELECT
+     responses.idResponse as idResponse,
+     responses.description as description,
+     responses.state as state,
+     questions.idQuestion as idQuestion,
+     questions.description as titleQuestion
+     FROM responses
+     INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion
+     WHERE questionIdQuestion= {idQuestion} ;"""
+
+    results = cursor.execute(sql).fetchall()
+    return results
+
+def get_user_id():
+    sql = "SELECT idUser FROM users WHERE name = 'regos';"
+    user = cursor.execute(sql).fetchone()
+    return user[0]
+
 if __name__ == "__main__":
     database = sqlite3.connect("quizz.db")
     cursor = database.cursor()
@@ -126,13 +182,12 @@ if __name__ == "__main__":
     cursor.execute(CREATE_TABLE_QUESTION)
     cursor.execute(CREATE_TABLE_RESPONSE)
 
-
     #load data Game
     cursor.execute(ADD_LECTURE)
     database.commit()
 
-    import_questions("../files/questions.csv")
-    import_responses("../files/responses.csv")
+    #import_questions("../files/questions.csv")
+    #import_responses("../files/responses.csv")
 
     # create payer
     name = input("Enter your player name: ")
@@ -159,18 +214,55 @@ if __name__ == "__main__":
     #questions = cursor.execute(GET_ALL_QUESTIONS_WITH_RESPONSES).fetchall()
     #print(questions)
 
+    #gameKJ
+    isPlaying = True
+    choice = 1
+    game_responses = []
 
 
+    while  isPlaying:
 
+        print("Etes vous pret a jouer le jeu ?")
+        choice = input("Choissessez 1 pour oui ou autre pour terminer la partie")
 
+        if choice == '1':
 
+            print("Vous pouvez commencer la partie")
+            print("QUIZZ GAME")
 
+            questions = cursor.execute(GET_ALL_QUESTIONS).fetchall()
+            i = 0
 
+            while i < len(questions):
 
+                question = questions[i]
+                idQuestion = question[3]
+                description = question[1]
 
+                print(f" Question:{i + 1} {description}")
 
+                responses = get_questions_response(idQuestion)
+                for index, response in enumerate(responses):
+                    print(f"  {index}--->    {response[1]}")
 
+                choice_response = input("Entrer votre response:")
+                game_responses.append(responses[int(choice_response)])
 
+                i = i + 1
 
+        else:
 
+            print("Recommencer ")
+        isPlaying = False
 
+        score = 0
+
+        for game_response in game_responses:
+            score = score + game_response[2]
+
+        print(f" Score Final  {score}  |  {len(game_responses)}")
+
+        idUser = get_user_id()
+        add_gaming(score , idUser)
+
+    print("Partie Terminee" )
