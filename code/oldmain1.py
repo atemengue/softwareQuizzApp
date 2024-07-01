@@ -2,8 +2,6 @@ import datetime
 import sqlite3
 import csv
 
-
-
 CREATE_TABLE_GAME = """
 CREATE TABLE IF NOT EXISTS game (
    idGame INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -116,23 +114,6 @@ WHERE name = 'regos'
 """
 
 
-# database init
-database = sqlite3.connect("quizz.db")
-cursor = database.cursor()
-
-def create_and_load_database(database, cursor):
-    cursor.execute(CREATE_TABLE_USER)
-    cursor.execute(CREATE_TABLE_GAME)
-    cursor.execute(CREATE_TABLE_LECTURE)
-    cursor.execute(CREATE_TABLE_QUESTION)
-    cursor.execute(CREATE_TABLE_RESPONSE)
-
-    cursor.execute(ADD_LECTURE)
-    database.commit()
-
-    import_questions("../files/questions.csv")
-    import_responses("../files/responses.csv")
-
 def add_player(name):
     sql = "INSERT INTO users(name, date) VALUES(?, ?);"
     values = (name, datetime.datetime.now())
@@ -190,13 +171,91 @@ def get_user_id():
     user = cursor.execute(sql).fetchone()
     return user[0]
 
-def get_all_questions():
-    return cursor.execute(GET_ALL_QUESTIONS).fetchall()
+if __name__ == "__main__":
+    database = sqlite3.connect("quizz.db")
+    cursor = database.cursor()
+    cursor.execute(CREATE_TABLE_USER)
+    cursor.execute(CREATE_TABLE_GAME)
+    cursor.execute(CREATE_TABLE_LECTURE)
+    cursor.execute(CREATE_TABLE_QUESTION)
+    cursor.execute(CREATE_TABLE_RESPONSE)
 
-def next_question(questions, question_number):
-    """Get the next question by incrementing the question number"""
 
-    question = questions[question_number]
-    idQuestion = question[3]
-    description = question[1]
-    return f"Q.{idQuestion}: {description}"
+
+    # create payer
+    name = input("Enter your player name: ")
+    add_player(name)
+
+    #add lecturer
+
+    #cursor.execute(ADD_LECTURE)
+    #database.commit()
+
+    ##add questions
+    #cursor.execute(ADD_QUESTION)
+    #database.commit()
+
+    #add responses
+    #cursor.execute(ADD_RESPONSES)
+    #database.commit()
+
+    #import responses
+    #import_csv("../files/lectures.csv")
+    #import_csv("../files/quez.csv")
+
+    #get all questions with responses
+    #questions = cursor.execute(GET_ALL_QUESTIONS_WITH_RESPONSES).fetchall()
+    #print(questions)
+
+    #gameKJ
+    isPlaying = True
+    choice = 1
+    game_responses = []
+
+
+    while  isPlaying:
+
+        print("Etes vous pret a jouer le jeu ?")
+        choice = input("Choissessez 1 pour oui ou autre pour terminer la partie")
+
+        if choice == '1':
+
+            print("Vous pouvez commencer la partie")
+            print("QUIZZ GAME")
+
+            questions = cursor.execute(GET_ALL_QUESTIONS).fetchall()
+            i = 0
+
+            while i < len(questions):
+
+                question = questions[i]
+                idQuestion = question[3]
+                description = question[1]
+
+                print(f" Question:{i + 1} {description}")
+
+                responses = get_questions_response(idQuestion)
+                for index, response in enumerate(responses):
+                    print(f"  {index}--->    {response[1]}")
+
+                choice_response = input("Entrer votre response:")
+                game_responses.append(responses[int(choice_response)])
+
+                i = i + 1
+
+        else:
+
+            print("Recommencer ")
+        isPlaying = False
+
+        score = 0
+
+        for game_response in game_responses:
+            score = score + game_response[2]
+
+        print(f" Score Final  {score}  |  {len(game_responses)}")
+
+        idUser = get_user_id()
+        add_gaming(score , idUser)
+
+    print("Partie Terminee" )
