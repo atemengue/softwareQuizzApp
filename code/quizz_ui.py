@@ -14,7 +14,6 @@ class QuizzInterface:
         self.questions = questions
 
 
-
         # Display Title
         self.display_title()
 
@@ -54,10 +53,13 @@ class QuizzInterface:
 
         # Title
         title = Label(self.window, text="iQuiz Application",
-                      width=50, bg="green", fg="white", font=("ariel", 20, "bold"))
+                      width=120, bg="green", fg="white", font=("ariel", 20, "bold"))
 
         # place of the title
         title.place(x=0, y=2)
+
+    # def display_username(self):
+
 
     def display_question(self):
         """To display the question"""

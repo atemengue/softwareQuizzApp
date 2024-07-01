@@ -120,7 +120,8 @@ WHERE name = 'regos'
 database = sqlite3.connect("quizz.db")
 cursor = database.cursor()
 
-def create_and_load_database(database, cursor):
+
+def create_and_load_database():
     cursor.execute(CREATE_TABLE_USER)
     cursor.execute(CREATE_TABLE_GAME)
     cursor.execute(CREATE_TABLE_LECTURE)
