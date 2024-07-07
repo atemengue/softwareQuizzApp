@@ -1,7 +1,11 @@
-from tkinter import Tk, Canvas, StringVar, Label, Radiobutton, Button, messagebox
-THEME_COLOR = "#375362"
+from tkinter import Tk, Canvas, StringVar, Label, Entry, Radiobutton, Button, messagebox, Menu, Frame
+from tkinter.filedialog import  askopenfilename
 from database import  get_questions_response
+from home_game_page import HomeGamePage
+from config_game_page import ConfigGame
+from quizz_game_page import QuizzGamePage
 
+THEME_COLOR = "#375362"
 
 class QuizzInterface:
     def __init__(self, questions) -> None:
@@ -12,39 +16,95 @@ class QuizzInterface:
         self.question_no = 0
         self.current_question = None
         self.questions = questions
+        self.username = ''
+
+
+        #creating container
+        container = Frame()
+        container.pack(side = "top", fill= "both", expand = True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        #initialization frames to an empty array
+        self.frames = {}
+
+        for F in (ConfigGame, HomeGamePage, QuizzGamePage):
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row = 0, column = 0, sticky = "nsew")
+
+        # show frames
+        self.show_frame(ConfigGame)
+
+       #DisplayMenu
+        #self.display_menu()
 
 
         # Display Title
-        self.display_title()
+       # self.display_title()
 
-        # Creating a canvas for question text, and dsiplay question
-        self.canvas = Canvas(width=800, height=250)
-        self.question_text = self.canvas.create_text(400, 125,
-                                                     text="Question here",
-                                                     width=680,
-                                                     fill=THEME_COLOR,
-                                                     font=(
-                                                         'Ariel', 15, 'italic')
-                                                     )
-        self.canvas.grid(row=2, column=0, columnspan=2, pady=50)
-        self.display_question()
+        # self.display_username()
 
-        # Declare a StringVar to store user's answer
-        self.user_answer = StringVar()
-
-        # Display four options(radio buttons)
-        self.opts = self.radio_buttons()
-        self.display_options()
-
-        # To show whether the answer is correct or wrong
-        self.feedback = Label(self.window, pady=10, font=("ariel", 15, "bold"))
-        self.feedback.place(x=300, y=380)
-
-        # Next and Quit Button
-        self.buttons()
+        # # Creating a canvas for question text, and dsiplay question
+        # self.canvas = Canvas(width=800, height=250)
+        # self.question_text = self.canvas.create_text(400, 125,
+        #                                              text="Question here",
+        #                                              width=680,
+        #                                              fill=THEME_COLOR,
+        #                                              font=(
+        #                                                  'Ariel', 15, 'italic')
+        #                                              )
+        # self.canvas.grid(row=2, column=0, columnspan=2, pady=50)
+        # self.display_question()
+        #
+        # # Declare a StringVar to store user's answer
+        # self.user_answer = StringVar()
+        #
+        # # Display four options(radio buttons)
+        # self.opts = self.radio_buttons()
+        # self.display_options()
+        #
+        # # To show whether the answer is correct or wrong
+        # self.feedback = Label(self.window, pady=10, font=("ariel", 15, "bold"))
+        # self.feedback.place(x=300, y=380)
+        #
+        # # Next and Quit Button
+        # self.buttons()
 
         # Mainloop
         self.window.mainloop()
+
+
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
+
+    def new_file(self):
+        print("New File!")
+
+    def open_file(self):
+        name = askopenfilename()
+        print(name)
+
+    def about_game(self):
+        print("This is a simple example of a menu")
+
+    def display_menu(self):
+        menu = Menu(self.window)
+        self.window.config(menu=menu)
+        file_menu = Menu(menu)
+        menu.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="New", command=self.new_file)
+        file_menu.add_command(label="Open...", command=self.open_file)
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=self.window.quit)
+
+        help_menu = Menu(menu)
+        menu.add_cascade(label="Help", menu=help_menu)
+        help_menu.add_command(label="About...", command=self.about_game)
 
     def display_title(self):
         """To display title"""
@@ -58,8 +118,22 @@ class QuizzInterface:
         # place of the title
         title.place(x=0, y=2)
 
-    # def display_username(self):
 
+    # def display_username(self):
+    #     global entry
+    #     string = entry.get()
+    #     Label.configure(text=string)
+    #
+    #      # Initialize a Label to display the User Input
+    #
+    #     label = Label(self.window, text="", font=("Courier 22 bold"))
+    #     label.pack()
+    #
+    #      # Create an Entry widget to accept User Input
+    #     entry = Entry(self, width=40)
+    #     entry.focus_set()
+    #     entry.pack()
+    #
 
     def display_question(self):
         """To display the question"""
