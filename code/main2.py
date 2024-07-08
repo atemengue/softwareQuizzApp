@@ -1,10 +1,6 @@
 import datetime
-import sqlite3
-import csv
-from tkinter import *
-from tkinter import ttk
-
-
+import  sqlite3
+import  csv
 
 CREATE_TABLE_GAME = """
 CREATE TABLE IF NOT EXISTS game (
@@ -195,15 +191,6 @@ if __name__ == "__main__":
     values = (score, idUser, datetime.datetime.now())
     cursor.execute(sql_add_score_user, values)
     database.commit()
-
-    root = Tk()
-    frm = ttk.Frame(root, padding=10)
-    frm.grid()
-    ttk.Label(frm, text="Hello World!").grid(column=0, row=0)
-    ttk.Button(frm, text="Quit", command=root.destroy).grid(column=1, row=0)
-    root.mainloop()
-
-
 
 print("Partie Terminee")
 
