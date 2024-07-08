@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import ttk
 from quizz_game_page import QuizzGamePage
 
+questions = []
+
 LARGEFONT =("Verdana", 35)
 
 class HomeGamePage(tk.Frame):
@@ -16,7 +18,7 @@ class HomeGamePage(tk.Frame):
         # grid
         label.grid(row=0, column=4, padx=10, pady=10)
 
-        button1 = ttk.Button(self, text="Quizz Game Page",command=lambda: controller.show_frame(QuizzGamePage))
+        button1 = ttk.Button(self, text="Quizz Game Page", command=self.show_quizz_game_page)
 
         # putting the button in its place by
         # using grid
@@ -28,3 +30,8 @@ class HomeGamePage(tk.Frame):
         # putting the button in its place by
         # using grid
         # button2.grid(row=2, column=1, padx=10, pady=10)
+
+    def show_quizz_game_page(self):
+        print("this is quizz game page")
+        #quizz_ui_1 = QuizzGamePage(self,[])
+        QuizzGamePage.init_questions_game(self)
