@@ -2,8 +2,6 @@ import datetime
 import sqlite3
 import csv
 
-
-
 CREATE_TABLE_GAME = """
 CREATE TABLE IF NOT EXISTS game (
    idGame INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,20 +117,18 @@ WHERE name = 'regos'
 # database init
 database = sqlite3.connect("quizz.db")
 cursor = database.cursor()
-
-
-def create_and_load_database():
+def create_database():
     cursor.execute(CREATE_TABLE_USER)
     cursor.execute(CREATE_TABLE_GAME)
     cursor.execute(CREATE_TABLE_LECTURE)
     cursor.execute(CREATE_TABLE_QUESTION)
     cursor.execute(CREATE_TABLE_RESPONSE)
 
-    cursor.execute(ADD_LECTURE)
-    database.commit()
-
+def import_database():
+    import_lectures("../files/lecture1.csv")
     import_questions("../files/questions.csv")
     import_responses("../files/responses.csv")
+
 
 def add_player(name):
     sql = "INSERT INTO users(name, date) VALUES(?, ?);"
@@ -171,6 +167,16 @@ def import_responses(csv_file):
         database.commit()
         print(f"Imported {len(rows)} investments from {csv_file}")
 
+def import_lectures(csv_file):
+    with open(csv_file, "r") as file:
+        reader = csv.reader(file, delimiter=",")
+        next(reader, None)
+        rows = list(reader)
+        print(rows)
+        sql = "INSERT INTO lectures VALUES (?, ?, ?, ?);"
+        cursor.executemany(sql, rows)
+        database.commit()
+        print(f"Imported {len(rows)} investments from {csv_file}")
 
 def get_questions_response(idQuestion):
     sql = f"""SELECT
