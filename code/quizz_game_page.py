@@ -11,20 +11,38 @@ class QuizzGamePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        print("Inside constructors controllers")
+        self.player_name = ""
+
+        # set defaut id lectuer to 1
+        self.id_lecture = 0
 
         # label of frame Layout 2
-        label = ttk.Label(self, text="Quizz Game Page", font=LARGEFONT)
+        label = Label(self, text="Quizz Game Page", font=LARGEFONT)
+        label.pack(padx=10, pady=10)
 
-        # putting the grid in its place by using
-        # grid
-        label.grid(row=0, column=4, padx=10, pady=10)
+        self.label1 = Label(self, text="qweqweq")
+        self.label1.pack(padx=10, pady=10)
+        self.label2 = Label(self, text="")
+        self.label2.pack(padx=10, pady=10)
 
+        print("Call 1")
 
-    @staticmethod
-    def init_questions_game(self):
-        print("Initialization game questions")
+        button1 = Button(self, text="update value",command=self.update)
+        button1.pack()
 
+    def get_config_game(self, name, id_lecture):
+        print("Call 2")
+        self.player_name = name
+        self.id_lecture = id_lecture
+
+    def update(self):
+        print("Call 2")
+        self.label1.configure(text=self.player_name)
+        self.label2.configure(text=self.id_lecture)
+
+    # def init_questions_game(self):
+    #     print("Initialization game questions")
+    #     test_hello()
     # def __init__(self, questions):
     #     self.window = Tk()
     #

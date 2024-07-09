@@ -134,7 +134,6 @@ def add_player(name):
     sql = "INSERT INTO users(name, date) VALUES(?, ?);"
     values = (name, datetime.datetime.now())
     a = cursor.execute(sql, values)
-    print(a)
     database.commit()
 
 

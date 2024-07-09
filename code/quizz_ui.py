@@ -2,7 +2,7 @@ from tkinter import Tk, Canvas, StringVar, Label, Entry, Radiobutton, Button, me
 from tkinter.filedialog import  askopenfilename
 from database import  get_questions_response
 from home_game_page import HomeGamePage
-from config_game_page import ConfigGame
+from config_game_page import ConfigGamePage
 from quizz_game_page import QuizzGamePage
 
 THEME_COLOR = "#375362"
@@ -32,7 +32,7 @@ class QuizzInterface:
         #initialization frames to an empty array
         self.frames = {}
 
-        for F in (ConfigGame, HomeGamePage, QuizzGamePage):
+        for F in (HomeGamePage, ConfigGamePage, QuizzGamePage):
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -40,7 +40,7 @@ class QuizzInterface:
             frame.grid(row = 0, column = 0, sticky = "nsew")
 
         # show frames
-        self.show_frame(ConfigGame)
+        self.show_frame(HomeGamePage)
 
         # Mainloop
         self.window.mainloop()
