@@ -59,11 +59,17 @@ class ConfigGamePage(tk.Frame):
 
         # add player on database
         add_player(self.name.get())
-        quizz_ui = QuizzGamePage(self.parent, self.controller)
 
-        self.controller.show_frame(QuizzGamePage)
+        # self.controller.play
+        # quizz_ui = QuizzGamePage(self.parent, self.controller)
+        # self.controller.show_frame(QuizzGamePage)
 
         # setConfigGame
-        quizz_ui.get_config_game(self.name.get(), self.option.get())
+        #quizz_ui.get_config_game(self.name.get(), self.option.get())
 
         #show QUizzGamePage
+
+        self.controller.SomeVar = self.name.get()
+        print(self.controller.SomeVar)
+        self.controller.frames[QuizzGamePage].correct_label()
+        self.controller.show_frame(QuizzGamePage)

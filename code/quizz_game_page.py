@@ -6,12 +6,18 @@ from database import  get_questions_response
 
 LARGEFONT =("Verdana", 35)
 
+Title_Font = ("Helvetica", 16, "bold")
+Label_Font = ("Helvetica", 10)
+
+
+
 class QuizzGamePage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         self.player_name = ""
+        self.controller = controller
 
         # set defaut id lectuer to 1
         self.id_lecture = 0
@@ -20,25 +26,35 @@ class QuizzGamePage(tk.Frame):
         label = Label(self, text="Quizz Game Page", font=LARGEFONT)
         label.pack(padx=10, pady=10)
 
-        self.label1 = Label(self, text="qweqweq")
+        self.label1 = Label(self)
         self.label1.pack(padx=10, pady=10)
         self.label2 = Label(self, text="")
         self.label2.pack(padx=10, pady=10)
 
-        print("Call 1")
+        self.frame2 = tk.LabelFrame(self, text="This is page two", font=Title_Font)
+        self.frame2.pack()
+
+        self.label3 = tk.Label(self.frame2)
+        self.label3.pack()
+
 
         button1 = Button(self, text="update value",command=self.update)
         button1.pack()
 
     def get_config_game(self, name, id_lecture):
-        print("Call 2")
         self.player_name = name
         self.id_lecture = id_lecture
+        self.label1.config(text=name)
+        self.label2.config(text=id_lecture)
 
     def update(self):
         print("Call 2")
-        self.label1.configure(text=self.player_name)
-        self.label2.configure(text=self.id_lecture)
+        self.player_name = self.player_name
+        #self.label1.configure(text=self.player_name)
+        #self.label2.configure(text=self.id_lecture)
+
+    def correct_label(self):
+        self.label3.config(text=self.controller.SomeVar)
 
     # def init_questions_game(self):
     #     print("Initialization game questions")
