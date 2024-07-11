@@ -12,15 +12,14 @@ class QuizzInterface:
 
         self.window = Tk()
         self.window.title("iQuiz App")
-        self.window.geometry("1280x900")
+        self.window.geometry("1000x630")
         self.score = 0
         self.question_no = 0
         self.current_question = None
         self.questions = []
-        self.username = 'regis'
-        self.hello = 'hello'
 
-        print(self)
+        # title = Label(self, text="iQuiz Application", width=30, bg="green", fg="white", font=("ariel", 30, "bold"))
+        # title.place(x=0, y=0)
 
         #creating container
         container = Frame()

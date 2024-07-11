@@ -17,24 +17,16 @@ class ConfigGamePage(tk.Frame):
         self.lectures =  []
 
         # label of frame Layout 2
-        label = ttk.Label(self, text="Config Game Page", font=LARGEFONT)
+        #label = ttk.Label(self, text="Config Game Page", font=LARGEFONT)
 
-        # putting the grid in its place by using
-        # grid
-        label.grid(row=0, column=4, padx=10, pady=10)
+        title = Label(self, text="iQuiz Application", width=40, bg="green", fg="white", font=("ariel", 30, "bold"))
+        title.place(x=0, y=0)
 
-        # label of frame Layout 2
-        # label = ttk.Label(self, text="Home Game Page  QUIZZ APP", font=LARGEFONT)
+        label = ttk.Label(self, text="Player Name", width=50, font=("ariel", 10, "bold"))
+        label.place(x=60, y=100)
 
-        # putting the grid in its place by using
-        # grid
-
-
-        label = ttk.Label(self, text="Player Name")
-        label.grid(row=1, column=0, padx=10, pady=10)
-
-        entry = Entry(self, textvariable=self.name)
-        entry.grid(row=1, column=1, padx=10, pady=10)
+        entry = Entry(self, textvariable=self.name, width=100)
+        entry.place(x=200, y=100)
 
         # Declare a StringVar to store user's answer
         self.user_lecture_answer = StringVar()
@@ -43,19 +35,9 @@ class ConfigGamePage(tk.Frame):
         self.opts = self.radio_buttons()
         self.display_lectures()
 
-
-        button1 = Button(self, text="Start Game",command=self.start_game)
-
-        # putting the button in its place by
-        # using grid
-        button1.grid(row=5, column=1, padx=10, pady=10)
-
-        ## button to show frame 2 with text layout2
-        # button2 = ttk.Button(self, text="Page 2", command=lambda: controller.show_frame(2))
-
-        # putting the button in its place by
-        # using grid
-        # button2.grid(row=2, column=1, padx=10, pady=10)\
+        button = Button(self, text="Start Game",command=self.start_game, width=10,
+                        bg="green", fg="white", font=("ariel", 16, "bold"))
+        button.place(x=80, y=460)
 
     def radio_buttons(self):
         """To create four options (radio buttons)"""
@@ -76,7 +58,7 @@ class ConfigGamePage(tk.Frame):
             lectures_list.append(radio_btn)
 
             # placing the button
-            radio_btn.place(x=200, y=y_pos)
+            radio_btn.place(x=100, y=y_pos)
 
             # incrementing the y-axis position by 40
             y_pos += 40

@@ -37,21 +37,22 @@ class QuizzGamePage(tk.Frame):
         # # label of frame Layout 2
         # label = Label(self, text="Quizz Game Page", font=LARGEFONT)
         # label.pack(padx=10, pady=10)
-        #
+        game_name = Label(self, text="iQuiz Application", width=40, bg="green", fg="white", font=("ariel", 30, "bold"))
+        game_name.place(x=0, y=0)
+
         self.label1 = Label(self)
         self.label1.pack(padx=10, pady=10)
-        self.label2 = Label(self, text="")
-        self.label2.pack(padx=10, pady=10)
 
-        # self.frame2 = tk.LabelFrame(self, text="This is page two", font=Title_Font)
-        # self.frame2.pack()
-        #
-        # self.label3 = tk.Label(self.frame2)
-        # self.label3.pack()
+        self.question_label = Label(self, text="", font=('Ariel', 15, 'italic'), bg="#375362", fg="white", width=680,)
+        self.question_label.pack(padx=50, pady=100)
 
-        # reating a canvas for question text, and dsiplay question
-        #self.label_question = ttk.Label(width=80, text="", font=('Ariel', 15, 'italic'))
-        #self.label_question.grid(row=1, column=0, padx=10, pady=10)
+        self.player_name_label_frame = tk.LabelFrame(self, text="Player Name: ", font=Title_Font)
+        self.player_name_label_frame.pack(padx=50, pady=100)
+
+        self.player_name_label_frame = tk.Label(self.player_name_label_frame)
+        self.player_name_label_frame.pack()
+
+
         # Declare a StringVar to store user's answer
         self.user_answer = StringVar()
 
@@ -59,37 +60,25 @@ class QuizzGamePage(tk.Frame):
         # Next and Quit Button
         self.buttons()
 
-
-
     def get_config_game(self, name, id_lecture):
         self.player_name = name
         self.id_lecture = id_lecture
         self.questions = random.sample(get_all_questions(id_lecture), k=2)
 
-        print(self.questions)
-
         # self.label_question.pack(padx=50, pady=10)
         self.display_question()
-        #
-
-
         # Display four options(radio buttons)
         self.opts = self.radio_buttons()
         self.display_options()
-
         # To show whether the answer is correct or wrong
-        self.feedback = Label(self, pady=10, font=("ariel", 15, "bold"))
-        self.feedback.place(x=300, y=380)
-
-
-    def update(self):
-        print("Call 2")
-        self.player_name = self.player_name
-        #self.label1.configure(text=self.player_name)
-        #self.label2.configure(text=self.id_lecture)
+        self.feedback = Label(self, pady=10, font=("ariel", 13, "bold"))
+        self.feedback.place(x=80, y=490)
 
     def correct_label(self):
-        #self.label3.config(text=self.controller.player_name)
+        #refresh to add player Name
+        self.player_name_label_frame.config(text=self.controller.player_name)
+
+
         self.id_lecture = self.controller.id_lecture
         self.questions = random.sample(get_all_questions(self.controller.id_lecture), k=3)
         self.current_question = self.questions[0][0]
@@ -103,8 +92,8 @@ class QuizzGamePage(tk.Frame):
         self.display_options()
 
         # To show whether the answer is correct or wrong
-        self.feedback = Label(self, pady=10, font=("ariel", 15, "bold"))
-        self.feedback.place(x=300, y=380)
+        self.feedback = Label(self, pady=10, font=("ariel", 13, "bold"))
+        self.feedback.place(x=80, y=490)
 
 
     # def init_questions_game(self):
@@ -214,7 +203,7 @@ class QuizzGamePage(tk.Frame):
 
     def display_question(self):
         q_text = self.next_question()
-        self.label2.config(text= "This is the question " +  q_text)
+        self.question_label.config(text=q_text)
         #self.label2.configure(text=self.id_lecture)
 
 
@@ -224,7 +213,7 @@ class QuizzGamePage(tk.Frame):
         self.question_no = self.current_question[0]
         self.question_increment += 1
         description = self.current_question[1]
-        return f"Q.{self.question_no}: {description}"
+        return f"Q.{self.question_increment}: {description}"
 
 #
     def radio_buttons(self):
@@ -246,7 +235,7 @@ class QuizzGamePage(tk.Frame):
             choice_list.append(radio_btn)
 
             # placing the button
-            radio_btn.place(x=200, y=y_pos)
+            radio_btn.place(x=100, y=y_pos)
 
             # incrementing the y-axis position by 40
             y_pos += 40
@@ -302,18 +291,19 @@ class QuizzGamePage(tk.Frame):
 
         # The first button is the Next button to move to the
         # next Question
+
         next_button = Button(self, text="Next", command=self.next_btn,
                              width=10, bg="green", fg="white", font=("ariel", 16, "bold"))
 
         # palcing the button  on the screen
-        next_button.place(x=350, y=460)
+        next_button.place(x=80, y=550)
 
         # This is the second button which is used to Quit the self.window
         quit_button = Button(self, text="Quit", command=self.destroy,
                              width=5, bg="red", fg="white", font=("ariel", 16, " bold"))
 
         # placing the Quit button on the screen
-        quit_button.place(x=700, y=50)
+        quit_button.place(x=700, y=550)
 #
     def check_answer(self):
         correct_answer = self.user_answer.get().split('/')[1] == "1"
@@ -326,7 +316,6 @@ class QuizzGamePage(tk.Frame):
 #
     def get_score(self):
         """Get the number of correct answers, wrong answers and score percentage."""
-
         wrong = self.question_no - self.score
         score_percent = int(self.score / self.question_no * 100)
         return (self.score, wrong, score_percent)

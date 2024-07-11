@@ -5,14 +5,14 @@ if __name__ == "__main__":
     questions = []
     try:
         #create database
-        create_database()
 
+        create_database()
         #import database
         import_database()
 
     except:
         print("Database exits")
 
-    #select all questions
     QuizzInterface()
+    #select all questions
 
