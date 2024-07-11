@@ -4,6 +4,7 @@ from database import  get_questions_response
 from home_game_page import HomeGamePage
 from config_game_page import ConfigGamePage
 from quizz_game_page import QuizzGamePage
+from score_game_page import ScoreGamePage
 
 THEME_COLOR = "#375362"
 
@@ -31,7 +32,7 @@ class QuizzInterface:
         #initialization frames to an empty array
         self.frames = {}
 
-        for F in (HomeGamePage, ConfigGamePage, QuizzGamePage):
+        for F in (HomeGamePage, ConfigGamePage, QuizzGamePage, ScoreGamePage):
             frame = F(container, self)
 
             self.frames[F] = frame

@@ -1,12 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, Label, Button, Toplevel, StringVar, Entry, IntVar, Radiobutton, Text, INSERT, END, RIGHT, LEFT
 from config_game_page import ConfigGamePage
-
-questions = []
-
 LARGEFONT = ("Verdana", 20, "bold")
-
-
 class HomeGamePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -20,6 +15,7 @@ class HomeGamePage(tk.Frame):
 
         about_game = Label(self, text="Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n "
                                       "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,\n "
+                               
                                       "when an unknown printer took a galley of type and scrambled it to make a type\n"
                                       "specimen book", font=('Aerial', 12))
 

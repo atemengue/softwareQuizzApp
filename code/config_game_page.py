@@ -4,9 +4,7 @@ from quizz_game_page import QuizzGamePage
 from tkinter import ttk, Label, Button, Toplevel, StringVar, Entry, IntVar, Radiobutton, Text
 from database import  add_player, get_lectures
 
-
 LARGEFONT =("Verdana", 35)
-
 
 class ConfigGamePage(tk.Frame):
     def __init__(self, parent, controller):

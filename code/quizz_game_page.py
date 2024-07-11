@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk, Canvas, StringVar, Label, Entry, Radiobutton, Button, messagebox, Menu, Frame
-from tkinter.filedialog import  askopenfilename
 from database import  get_questions_response, get_all_questions
 import random
+from score_game_page import ScoreGamePage
 
-LARGEFONT =("Verdana", 35)
+
+LARGEFONT = ("Verdana", 35)
 Title_Font = ("Helvetica", 16, "bold")
 Label_Font = ("Helvetica", 10)
 THEME_COLOR = "#375362"
@@ -40,9 +41,6 @@ class QuizzGamePage(tk.Frame):
         game_name = Label(self, text="iQuiz Application", width=40, bg="green", fg="white", font=("ariel", 30, "bold"))
         game_name.place(x=0, y=0)
 
-        self.label1 = Label(self)
-        self.label1.pack(padx=10, pady=10)
-
         self.question_label = Label(self, text="", font=('Ariel', 15, 'italic'), bg="#375362", fg="white", width=680,)
         self.question_label.pack(padx=50, pady=100)
 
@@ -77,8 +75,6 @@ class QuizzGamePage(tk.Frame):
     def correct_label(self):
         #refresh to add player Name
         self.player_name_label_frame.config(text=self.controller.player_name)
-
-
         self.id_lecture = self.controller.id_lecture
         self.questions = random.sample(get_all_questions(self.controller.id_lecture), k=3)
         self.current_question = self.questions[0][0]
@@ -281,9 +277,9 @@ class QuizzGamePage(tk.Frame):
         else:
             # if no more questions, then it displays the score
             self.display_result()
-
+            #self.controller.show_frame(ScoreGamePage)
             # destroys the self.window
-            self.window.destroy()
+            self.destroy()
 #
 #
     def buttons(self):
