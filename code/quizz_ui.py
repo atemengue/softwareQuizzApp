@@ -12,7 +12,7 @@ class QuizzInterface:
 
         self.window = Tk()
         self.window.title("iQuiz App")
-        self.window.geometry("850x530")
+        self.window.geometry("1280x900")
         self.score = 0
         self.question_no = 0
         self.current_question = None

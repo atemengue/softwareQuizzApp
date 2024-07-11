@@ -113,6 +113,10 @@ FROM users
 WHERE name = 'regos'
 """
 
+GET_ALL_LECTURES = """
+SELECT *
+FROM lectures;
+"""
 
 # database init
 database = sqlite3.connect("quizz.db")
@@ -195,6 +199,10 @@ def get_user_id():
     sql = "SELECT idUser FROM users WHERE name = 'regos';"
     user = cursor.execute(sql).fetchone()
     return user[0]
+
+def get_lectures():
+    lectures = cursor.execute(GET_ALL_LECTURES).fetchall()
+    return lectures
 
 def get_all_questions():
     return cursor.execute(GET_ALL_QUESTIONS).fetchall()

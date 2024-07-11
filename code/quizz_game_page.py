@@ -1,14 +1,12 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import Tk, Canvas, StringVar, Label, Entry, Radiobutton, Button, messagebox, Menu, Frame
+from tkinter import ttk, Canvas, StringVar, Label, Entry, Radiobutton, Button, messagebox, Menu, Frame
 from tkinter.filedialog import  askopenfilename
 from database import  get_questions_response
 
 LARGEFONT =("Verdana", 35)
-
 Title_Font = ("Helvetica", 16, "bold")
 Label_Font = ("Helvetica", 10)
-
+THEME_COLOR = "#375362"
 
 
 class QuizzGamePage(tk.Frame):
@@ -16,36 +14,69 @@ class QuizzGamePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        self.score = 0
+        self.question_no = 0
+        self.current_question = None
+        self.questions = get_questions_response(1)
+        self.parent = parent
+
+
         self.player_name = ""
         self.controller = controller
 
         # set defaut id lectuer to 1
-        self.id_lecture = 0
+        self.id_lecture = 1
 
-        # label of frame Layout 2
-        label = Label(self, text="Quizz Game Page", font=LARGEFONT)
-        label.pack(padx=10, pady=10)
-
+        # Declare a StringVar to store user's answer
+        self.user_answer = StringVar()
+        #
+        # # set defaut id lectuer to 1
+        # self.id_lecture = 0
+        #
+        # # label of frame Layout 2
+        # label = Label(self, text="Quizz Game Page", font=LARGEFONT)
+        # label.pack(padx=10, pady=10)
+        #
         self.label1 = Label(self)
         self.label1.pack(padx=10, pady=10)
         self.label2 = Label(self, text="")
         self.label2.pack(padx=10, pady=10)
 
-        self.frame2 = tk.LabelFrame(self, text="This is page two", font=Title_Font)
-        self.frame2.pack()
+        # self.frame2 = tk.LabelFrame(self, text="This is page two", font=Title_Font)
+        # self.frame2.pack()
+        #
+        # self.label3 = tk.Label(self.frame2)
+        # self.label3.pack()
 
-        self.label3 = tk.Label(self.frame2)
-        self.label3.pack()
+        # reating a canvas for question text, and dsiplay question
+        #self.label_question = ttk.Label(width=80, text="", font=('Ariel', 15, 'italic'))
+        #self.label_question.grid(row=1, column=0, padx=10, pady=10)
 
+        #self.label_question.pack(padx=50, pady=10)
+        self.display_question()
+        #
+        # Declare a StringVar to store user's answer
+        self.user_answer = StringVar()
+
+        # Display four options(radio buttons)
+        self.opts = self.radio_buttons()
+        self.display_options()
+
+        # To show whether the answer is correct or wrong
+        self.feedback = Label(self, pady=10, font=("ariel", 15, "bold"))
+        self.feedback.place(x=300, y=380)
+
+        # Next and Quit Button
+        self.buttons()
 
         button1 = Button(self, text="update value",command=self.update)
         button1.pack()
 
+
+
     def get_config_game(self, name, id_lecture):
         self.player_name = name
         self.id_lecture = id_lecture
-        self.label1.config(text=name)
-        self.label2.config(text=id_lecture)
 
     def update(self):
         print("Call 2")
@@ -54,7 +85,9 @@ class QuizzGamePage(tk.Frame):
         #self.label2.configure(text=self.id_lecture)
 
     def correct_label(self):
-        self.label3.config(text=self.controller.SomeVar)
+        #self.label3.config(text=self.controller.player_name)
+        self.id_lecture = self.controller.id_lecture
+
 
     # def init_questions_game(self):
     #     print("Initialization game questions")
@@ -133,17 +166,17 @@ class QuizzGamePage(tk.Frame):
 #     help_menu.add_command(label="About...", command=self.about_game)
 #
 #
-    def display_title(self):
-        """To display title"""
-
-        print("Title")
-
-        # Title
-        title = Label(self.window, text="iQuiz Application",
-                      width=120, bg="green", fg="white", font=("ariel", 20, "bold"))
+#     def display_title(self):
+#         """To display title"""
 #
-        # place of the title
-        title.place(x=0, y=2)
+#         print("Title")
+#
+#         # Title
+#         title = Label(self.window, text="iQuiz Application",
+#                       width=120, bg="green", fg="white", font=("ariel", 20, "bold"))
+# #
+#         # place of the title
+#         title.place(x=0, y=2)
 
     # def display_username(self):
     #     global entry
@@ -159,141 +192,136 @@ class QuizzGamePage(tk.Frame):
     #     entry = Entry(self, width=40)
     #     entry.focus_set()
     #     entry.pack()
-    #
+
+
+    def display_question(self):
+        q_text = self.next_question()
+        self.label2.config(text= "This is the question " +  q_text)
+        #self.label2.configure(text=self.id_lecture)
+
+
+    def next_question(self):
+#     """Get the next question by incrementing the question number"""
+        self.current_question = self.questions[self.question_no]
+        self.question_no += 1
+        description = self.current_question[1]
+        return f"Q.{self.question_no}: {description}"
 
 #
-# def display_question(self):
-#     """To display the question"""
-#
-#     q_text = self.next_question()
-#     self.canvas.itemconfig(self.question_text, text=q_text)
-#
-#
-# def next_question(self):
-#     """Get the next question by incrementing the question number"""
-#
-#     self.current_question = self.questions[self.question_no]
-#     self.question_no += 1
-#     description = self.current_question[1]
-#     return f"Q.{self.question_no}: {description}"
-#
-#
-# def radio_buttons(self):
-#     """To create four options (radio buttons)"""
-#
-#     # initialize the list with an empty list of options
-#     choice_list = []
-#
-#     # position of the first option
-#     y_pos = 220
-#
-#     # adding the options to the list
-#     while len(choice_list) < 3:
-#         # setting the radio button properties
-#         radio_btn = Radiobutton(self.window, text="", variable=self.user_answer,
-#                                 value='', font=("ariel", 14))
-#
-#         # adding the button to the list
-#         choice_list.append(radio_btn)
-#
-#         # placing the button
-#         radio_btn.place(x=200, y=y_pos)
-#
-#         # incrementing the y-axis position by 40
-#         y_pos += 40
-#
-#     # return the radio buttons
-#     return choice_list
+    def radio_buttons(self):
+        """To create four options (radio buttons)"""
+
+        # initialize the list with an empty list of options
+        choice_list = []
+
+        # position of the first option
+        y_pos = 220
+
+        # adding the options to the list
+        while len(choice_list) < 3:
+            # setting the radio button properties
+            radio_btn = Radiobutton(self, text="", variable=self.user_answer,
+                                    value='', font=("ariel", 14))
+
+            # adding the button to the list
+            choice_list.append(radio_btn)
+
+            # placing the button
+            radio_btn.place(x=200, y=y_pos)
+
+            # incrementing the y-axis position by 40
+            y_pos += 40
+
+        # return the radio buttons
+        return choice_list
 #
 #
-# def display_options(self):
-#     """To display four options"""
-#
-#     val = 0
-#
-#     # deselecting the options
-#     self.user_answer.set(None)
-#     responses = get_questions_response(self.question_no)
-#
-#     # get responses  questions
-#
-#     # looping over the options to be displayed for the
-#     # text of the radio buttons.
-#     for response in responses:
-#         self.opts[val]['text'] = response[1]
-#         self.opts[val]['value'] = response[1] + '/' + str(response[2])
-#         val += 1
-#
-#
-# def next_btn(self):
-#     """To show feedback for each answer and keep checking for more questions"""
-#
-#     # Check if the answer is correct
-#     if self.check_answer():
-#         self.feedback["fg"] = "green"
-#         self.feedback["text"] = 'Correct answer! \U0001F44D'
-#     else:
-#         self.feedback['fg'] = 'red'
-#         self.feedback['text'] = ('\u274E Oops! \n'
-#                                  f'The right Response is: {self.current_question[2]}')
-#
-#     if self.question_no < len(self.questions):
-#         # Moves to next to display next question and its options
-#         self.display_question()
-#         self.display_options()
-#     else:
-#         # if no more questions, then it displays the score
-#         self.display_result()
-#
-#         # destroys the self.window
-#         self.window.destroy()
+    def display_options(self):
+        """To display four options"""
+
+        val = 0
+
+        # deselecting the options
+        self.user_answer.set(None)
+        # get responses  questions
+        # looping over the options to be displayed for the
+        # text of the radio buttons.
+        responses = get_questions_response(self.question_no)
+
+        for response in responses:
+            self.opts[val]['text'] = response[1]
+            self.opts[val]['value'] = response[1] + '/' + str(response[2])
+            val += 1
 #
 #
-# def buttons(self):
-#     """To show next button and quit button"""
-#
-#     # The first button is the Next button to move to the
-#     # next Question
-#     next_button = Button(self.window, text="Next", command=self.next_btn,
-#                          width=10, bg="green", fg="white", font=("ariel", 16, "bold"))
-#
-#     # palcing the button  on the screen
-#     next_button.place(x=350, y=460)
-#
-#     # This is the second button which is used to Quit the self.window
-#     quit_button = Button(self.window, text="Quit", command=self.window.destroy,
-#                          width=5, bg="red", fg="white", font=("ariel", 16, " bold"))
-#
-#     # placing the Quit button on the screen
-#     quit_button.place(x=700, y=50)
-#
-#
-# def check_answer(self):
-#     correct_answer = self.user_answer.get().split('/')[1] == "1"
-#     if correct_answer:
-#         self.score += 1
-#         return True
-#     else:
-#         return False
+    def next_btn(self):
+        """To show feedback for each answer and keep checking for more questions"""
+
+        # Check if the answer is correct
+        if self.check_answer():
+            self.feedback["fg"] = "green"
+            self.feedback["text"] = 'Correct answer! \U0001F44D'
+        else:
+            self.feedback['fg'] = 'red'
+            self.feedback['text'] = ('\u274E Oops! \n'
+                                     f'The right Response is: {self.current_question[2]}')
+
+        if self.question_no < len(self.questions):
+            # Moves to next to display next question and its options
+            self.display_question()
+            self.display_options()
+        else:
+            # if no more questions, then it displays the score
+            self.display_result()
+
+            # destroys the self.window
+            self.window.destroy()
 #
 #
-# def get_score(self):
-#     """Get the number of correct answers, wrong answers and score percentage."""
+    def buttons(self):
+        """To show next button and quit button"""
+
+        # The first button is the Next button to move to the
+        # next Question
+        next_button = Button(self, text="Next", command=self.next_btn,
+                             width=10, bg="green", fg="white", font=("ariel", 16, "bold"))
+
+        # palcing the button  on the screen
+        next_button.place(x=350, y=460)
+
+        # This is the second button which is used to Quit the self.window
+        quit_button = Button(self, text="Quit", command=self.destroy,
+                             width=5, bg="red", fg="white", font=("ariel", 16, " bold"))
+
+        # placing the Quit button on the screen
+        quit_button.place(x=700, y=50)
 #
-#     wrong = self.question_no - self.score
-#     score_percent = int(self.score / self.question_no * 100)
-#     return (self.score, wrong, score_percent)
+    def check_answer(self):
+        correct_answer = self.user_answer.get().split('/')[1] == "1"
+        if correct_answer:
+            self.score += 1
+            return True
+        else:
+            return False
 #
 #
-# def display_result(self):
-#     """To display the result using messagebox"""
-#     correct, wrong, score_percent = self.get_score()
+    def get_score(self):
+        """Get the number of correct answers, wrong answers and score percentage."""
+
+        wrong = self.question_no - self.score
+        score_percent = int(self.score / self.question_no * 100)
+        return (self.score, wrong, score_percent)
 #
-#     correct = f"Correct: {correct}"
-#     wrong = f"Wrong: {wrong}"
 #
-#     # calculates the percentage of correct answers
-#     result = f"Score: {score_percent}%"
-#
-#     # Shows a message box to display the result
-#     messagebox.showinfo("Result", f"{result}\n{correct}\n{wrong}")
+    def display_result(self):
+        """To display the result using messagebox"""
+        correct, wrong, score_percent = self.get_score()
+
+        correct = f"Correct: {correct}"
+        wrong = f"Wrong: {wrong}"
+
+        # calculates the percentage of correct answers
+        result = f"Score: {score_percent}%"
+
+        # Shows a message box to display the result
+        messagebox.showinfo("Result", f"{result}\n{correct}\n{wrong}")
