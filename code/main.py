@@ -14,6 +14,5 @@ if __name__ == "__main__":
         print("Database exits")
 
     #select all questions
-    quizz_ui = QuizzInterface()
-
+    QuizzInterface()
 

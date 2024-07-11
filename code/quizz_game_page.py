@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, Canvas, StringVar, Label, Entry, Radiobutton, Button, messagebox, Menu, Frame
 from tkinter.filedialog import  askopenfilename
-from database import  get_questions_response
+from database import  get_questions_response, get_all_questions
+import random
 
 LARGEFONT =("Verdana", 35)
 Title_Font = ("Helvetica", 16, "bold")
@@ -16,10 +17,10 @@ class QuizzGamePage(tk.Frame):
 
         self.score = 0
         self.question_no = 0
+        self.question_increment = 0
         self.current_question = None
-        self.questions = get_questions_response(1)
+        self.questions = []
         self.parent = parent
-
 
         self.player_name = ""
         self.controller = controller
@@ -51,12 +52,26 @@ class QuizzGamePage(tk.Frame):
         # reating a canvas for question text, and dsiplay question
         #self.label_question = ttk.Label(width=80, text="", font=('Ariel', 15, 'italic'))
         #self.label_question.grid(row=1, column=0, padx=10, pady=10)
-
-        #self.label_question.pack(padx=50, pady=10)
-        self.display_question()
-        #
         # Declare a StringVar to store user's answer
         self.user_answer = StringVar()
+
+
+        # Next and Quit Button
+        self.buttons()
+
+
+
+    def get_config_game(self, name, id_lecture):
+        self.player_name = name
+        self.id_lecture = id_lecture
+        self.questions = random.sample(get_all_questions(id_lecture), k=2)
+
+        print(self.questions)
+
+        # self.label_question.pack(padx=50, pady=10)
+        self.display_question()
+        #
+
 
         # Display four options(radio buttons)
         self.opts = self.radio_buttons()
@@ -66,17 +81,6 @@ class QuizzGamePage(tk.Frame):
         self.feedback = Label(self, pady=10, font=("ariel", 15, "bold"))
         self.feedback.place(x=300, y=380)
 
-        # Next and Quit Button
-        self.buttons()
-
-        button1 = Button(self, text="update value",command=self.update)
-        button1.pack()
-
-
-
-    def get_config_game(self, name, id_lecture):
-        self.player_name = name
-        self.id_lecture = id_lecture
 
     def update(self):
         print("Call 2")
@@ -87,6 +91,20 @@ class QuizzGamePage(tk.Frame):
     def correct_label(self):
         #self.label3.config(text=self.controller.player_name)
         self.id_lecture = self.controller.id_lecture
+        self.questions = random.sample(get_all_questions(self.controller.id_lecture), k=3)
+        self.current_question = self.questions[0][0]
+
+        # self.label_question.pack(padx=50, pady=10)
+        self.display_question()
+        #
+
+        # Display four options(radio buttons)
+        self.opts = self.radio_buttons()
+        self.display_options()
+
+        # To show whether the answer is correct or wrong
+        self.feedback = Label(self, pady=10, font=("ariel", 15, "bold"))
+        self.feedback.place(x=300, y=380)
 
 
     # def init_questions_game(self):
@@ -202,8 +220,9 @@ class QuizzGamePage(tk.Frame):
 
     def next_question(self):
 #     """Get the next question by incrementing the question number"""
-        self.current_question = self.questions[self.question_no]
-        self.question_no += 1
+        self.current_question = self.questions[self.question_increment]
+        self.question_no = self.current_question[0]
+        self.question_increment += 1
         description = self.current_question[1]
         return f"Q.{self.question_no}: {description}"
 
@@ -266,7 +285,7 @@ class QuizzGamePage(tk.Frame):
             self.feedback['text'] = ('\u274E Oops! \n'
                                      f'The right Response is: {self.current_question[2]}')
 
-        if self.question_no < len(self.questions):
+        if self.question_increment < len(self.questions):
             # Moves to next to display next question and its options
             self.display_question()
             self.display_options()

@@ -91,7 +91,8 @@ INNER JOIN questions ON responses.questionIdQuestion = questions.idQuestion;
 
 GET_ALL_QUESTIONS = """
 SELECT  *
-FROM  questions;
+FROM  questions
+WHERE lectureIdLecture = ?
 """
 
 GET_ALL_RESPONSES_OF_ONE_QUESTIONS = """
@@ -121,12 +122,15 @@ FROM lectures;
 # database init
 database = sqlite3.connect("quizz.db")
 cursor = database.cursor()
+
+
 def create_database():
     cursor.execute(CREATE_TABLE_USER)
     cursor.execute(CREATE_TABLE_GAME)
     cursor.execute(CREATE_TABLE_LECTURE)
     cursor.execute(CREATE_TABLE_QUESTION)
     cursor.execute(CREATE_TABLE_RESPONSE)
+
 
 def import_database():
     import_lectures("../files/lecture1.csv")
@@ -146,6 +150,7 @@ def add_gaming(score, iduser):
     values = (score, iduser, datetime.datetime.now())
     cursor.execute(sql, values)
     database.commit()
+
 
 def import_questions(csv_file):
     with open(csv_file, "r") as file:
@@ -170,6 +175,7 @@ def import_responses(csv_file):
         database.commit()
         print(f"Imported {len(rows)} investments from {csv_file}")
 
+
 def import_lectures(csv_file):
     with open(csv_file, "r") as file:
         reader = csv.reader(file, delimiter=",")
@@ -180,6 +186,7 @@ def import_lectures(csv_file):
         cursor.executemany(sql, rows)
         database.commit()
         print(f"Imported {len(rows)} investments from {csv_file}")
+
 
 def get_questions_response(idQuestion):
     sql = f"""SELECT
@@ -195,17 +202,25 @@ def get_questions_response(idQuestion):
     results = cursor.execute(sql).fetchall()
     return results
 
+
 def get_user_id():
     sql = "SELECT idUser FROM users WHERE name = 'regos';"
     user = cursor.execute(sql).fetchone()
     return user[0]
 
+
 def get_lectures():
     lectures = cursor.execute(GET_ALL_LECTURES).fetchall()
     return lectures
 
-def get_all_questions():
-    return cursor.execute(GET_ALL_QUESTIONS).fetchall()
+
+def get_all_questions(id_lecture):
+    sql = f"""SELECT * FROM questions WHERE lectureIdLecture = {id_lecture};"""
+    cursor.execute(sql)
+    questions = cursor.execute(sql).fetchall()
+    print(questions)
+    return questions
+
 
 def next_question(questions, question_number):
     """Get the next question by incrementing the question number"""
