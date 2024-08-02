@@ -16,3 +16,4 @@ if __name__ == "__main__":
     QuizzInterface()
     #select all questions
 
+2
