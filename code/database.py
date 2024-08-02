@@ -229,3 +229,5 @@ def next_question(questions, question_number):
     idQuestion = question[3]
     description = question[1]
     return f"Q.{idQuestion}: {description}"
+
+def save_pary(score, id_user):

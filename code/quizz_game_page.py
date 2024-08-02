@@ -260,7 +260,6 @@ class QuizzGamePage(tk.Frame):
 #
     def next_btn(self):
         """To show feedback for each answer and keep checking for more questions"""
-
         # Check if the answer is correct
         if self.check_answer():
             self.feedback["fg"] = "green"
@@ -276,6 +275,7 @@ class QuizzGamePage(tk.Frame):
             self.display_options()
         else:
             # if no more questions, then it displays the score
+            self.save_party()
             self.display_result()
             #self.controller.show_frame(ScoreGamePage)
             # destroys the self.window
@@ -310,6 +310,8 @@ class QuizzGamePage(tk.Frame):
             return False
 #
 #
+    def save_party(self):
+
     def get_score(self):
         """Get the number of correct answers, wrong answers and score percentage."""
         wrong = self.question_no - self.score
